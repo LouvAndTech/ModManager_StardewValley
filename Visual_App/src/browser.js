@@ -1,12 +1,20 @@
+const { ipcRenderer } = require("electron");
+
 console.log("Browser.js loaded");
+const ipc =  require('electron').ipcRenderer
 
 /*===Class===*/
 class ZipFile{
-    constructor(name,path,unzip){
+    constructor(name,path,unziped){
         this.name = name;//name of the file
         this.path = path;   //Path of the zip file 
-        this.unzip = unzip; //Is the file already unzip or not 
+        this.unziped = unziped
+
     } 
+
+    unzip(){
+        ipc.send('command',["unzip", this])
+    }
 }
 
 class ModFolder {
@@ -19,18 +27,7 @@ class ModFolder {
 }
 
 /*===Fonctions===*/
-function unzip (File){
-    //create the path of the new mod Folder
-    let newPath = '?'
-    //exctract
-    fs.createReadStream(File.path)
-        .pipe(unzipper.Extract({ path: newPath }));
-    //change the zip statue to Done 
-    File.unzip = true;
-    //create an object ModFolder to store data about the new mod
-    let newModFolder = new ModFolder (File.name,newPath,false,'none');
-    return newModFolder;
-}
+
 
 /*===MAIN===*/
 
@@ -38,7 +35,7 @@ function unzip (File){
 //Initialise a new mod added as a zip file
 let zip1 = new ZipFile("test1",'test/try.zip',false);
 //transforme the Zip file into a usable mod folder
-let mod1 = unzip(zip1);
+let mod1 = zip1.unzip(zip1);
 
 
 console.log(zip1);
