@@ -12,12 +12,12 @@ class ZipFile{
 
     } 
 
-    unzip(){
-        ipc.send('command',["unzip", this])
+    refresh(){
+        ipc.send('command',["refresh", this])
     }
 }
 
-class ModFolder {
+class Mod{
     constructor(name,path,enable,configPath){
         this.name = name;   //Mod name
         this.path = path;   //Usable ModFolder path 
@@ -35,8 +35,7 @@ class ModFolder {
 //Initialise a new mod added as a zip file
 let zip1 = new ZipFile("test1",'test/try.zip',false);
 //transforme the Zip file into a usable mod folder
-let mod1 = zip1.unzip(zip1);
+
 
 
 console.log(zip1);
-console.log(mod1);

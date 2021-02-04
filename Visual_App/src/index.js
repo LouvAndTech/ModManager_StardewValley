@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const execution = require ("./execution")
+const Store = require('electron-store');
+const store = new Store();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -9,14 +11,17 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 const createWindow = () => {
   // Create the browser window.
+  const mainWindowStateKeeper = windowStateKeeper('main');
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    x: mainWindowStateKeeper.x,
+    y: mainWindowStateKeeper.y,
+    width: mainWindowStateKeeper.width,
+    height: mainWindowStateKeeper.height,
     webPreferences:{
       nodeIntegration : true 
     }
   });
-
+  mainWindowStateKeeper.track(mainWindow);
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
@@ -38,6 +43,7 @@ app.on('window-all-closed', () => {
   }
 });
 
+
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -45,6 +51,40 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
+execution()
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+function windowStateKeeper(windowName) {
+  let window, windowState;  function setBounds() {
+    // Restore from appConfig
+    if (store.get(`windowState.${windowName}`) != undefined) {
+      windowState = store.get(`windowState.${windowName}`);
+      return;
+    }
+    // Default
+    windowState = {
+      x: undefined,
+      y: undefined,
+      width: 1000,
+      height: 800,
+    };
+  }  function saveState() {
+    if (!windowState.isMaximized) {
+      windowState = window.getBounds();
+    }
+    windowState.isMaximized = window.isMaximized();
+    store.set(`windowState.${windowName}`, windowState);
+  }  function track(win) {
+    window = win;
+    ['resize', 'move', 'close'].forEach(event => {
+      win.on(event, saveState);
+    });
+  }  setBounds();  return({
+    x: windowState.x,
+    y: windowState.y,
+    width: windowState.width,
+    height: windowState.height,
+    isMaximized: windowState.isMaximized,
+    track,
+  });
+}
