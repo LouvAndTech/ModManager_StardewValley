@@ -61,7 +61,7 @@ module.exports = (win) => {
         }
         metaData(modPath,badName){
             let dpname = badName
-            let ver = 0.0
+            let ver = "V 0.0"
             let path = modPath
             let itemList = []
             for (let i=0;i<4;i++){
@@ -73,13 +73,14 @@ module.exports = (win) => {
             let RAW = fs.readFileSync(path+'/manifest.json', {encoding:'ascii'})
             console.log(RAW)
             let manifest = durableJsonLint(RAW)
+
             try {
-            manifest = JSON.parse(manifest.json)
-                    
-                console.log(manifest.Name)tch (error) {
-                console.log(e)
-            }rror
-            console.log(manifest.Name)
+                manifest = JSON.parse(manifest.json)
+                console.log(manifest.Name)
+            } catch (error) {
+                console.error(error)
+            }
+
             return({
                 displayName : dpname ,
                 vers : ver
