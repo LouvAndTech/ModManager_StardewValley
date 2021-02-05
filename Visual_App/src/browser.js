@@ -20,10 +20,10 @@ class Mod{
         this.name = obj.name;   //Mod name
         this.path = obj.path;   //Usable ModFolder path 
         this.configPath = obj.configPath;   //Path to the "config" file into the mod folder
-        /*this.meta = {
-            displayName : obj.info.displayName,
-            vers : obj.info.vers
-        }*/
+        this.meta = {
+            displayName : obj.meta.displayName,
+            vers : obj.meta.vers
+        }
         this.enable = obj.enable; //is the mod enable or not 
     }
 }

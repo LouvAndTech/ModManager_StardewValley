@@ -20,8 +20,14 @@ module.exports = (win) => {
     
     class ModFolder{
         constructor(){
-            this.refresh()
+            this.recreateCollections()
         } 
+        recreateCollections(){
+            this.refresh()
+            this.update()
+            this.refresh()
+            win.webContents.send('data',this.lstMod)
+        }
         refresh(){
             let lstZipProv = fs.readdirSync('Mods/Zip');
             let lstModProv = fs.readdirSync('Mods/Mod');
@@ -46,8 +52,6 @@ module.exports = (win) => {
                     enable : lstActiveProv.includes(lstModProv[i]) ? true : false 
                 }))
             }
-            this.update()
-            win.webContents.send('data',this.lstMod)
         }
         update(){
             for (let i=0;i<this.lstZip.length;i++){
@@ -77,6 +81,8 @@ module.exports = (win) => {
             try {
                 manifest = JSON.parse(manifest.json)
                 console.log(manifest.Name)
+                dpname = manifest.Name.
+                vers=
             } catch (error) {
                 console.error(error)
             }

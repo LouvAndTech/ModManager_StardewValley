@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const execution = require ("./execution")
+const main = require ("./main")
 const Store = require('electron-store');
 const store = new Store();
 require('electron-reload')(__dirname);
@@ -34,7 +34,7 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 
   ipcMain.on('initialized',()=>{
-    execution(mainWindow);
+    main(mainWindow);
   })
 
 };
