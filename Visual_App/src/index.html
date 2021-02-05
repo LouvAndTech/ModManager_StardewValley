@@ -21,8 +21,8 @@
           <td class="w-2"></td>
           <td class="p-2 bg-gradient-to-bl from-blue-900 to-purple-900 rounded">{{ mod.meta.vers }} </td>
           <td class="w-2"></td>
-          <td class="px-2">
-            <a class="text-center rounded h-full w-full" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable">{{ mod.enable ? "Activé" : "Désactivé" }}</a>
+          <td class="px-2 flex h-10">
+            <a class="text-center rounded h-full w-full p-2 transition-colors" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "Activé" : "Désactivé" }}</a>
           </td>
         </tr>
         <tr>

@@ -41,9 +41,14 @@ ipc.on("data", (e, data)=>{
     var app = new Vue({
         el: '#mod-list',
         data: {
-            lstModB: lstModB
+            lstModB: lstModB,
+            updateMods: updateMods
         }
       })
 })
-
+ 
 ipc.send("initialized", true)
+
+function updateMods(mod){
+    ipc.send("updateModStatus", mod)
+}

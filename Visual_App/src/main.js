@@ -23,6 +23,7 @@ module.exports = (win) => {
             this.recreateCollections()
         } 
         recreateCollections(){
+            this.events()
             this.refresh()
             this.update()
             this.refresh()
@@ -65,7 +66,7 @@ module.exports = (win) => {
         }
         metaData(modPath,badName){
             let dpname = badName
-            let ver = "V 0.0"
+            let ver = "0.0"
             let path = modPath
             let itemList = []
             for (let i=0;i<4;i++){
@@ -73,23 +74,29 @@ module.exports = (win) => {
                 if (itemList.includes('manifest.json')){break}
                 else{path=path+'/'+itemList[0]}
             }
-            console.log(path+'/manifest.json')
             let RAW = fs.readFileSync(path+'/manifest.json', {encoding:'ascii'})
-            console.log(RAW)
             let manifest = durableJsonLint(RAW)
 
             try {
                 manifest = JSON.parse(manifest.json)
-                console.log(manifest.Name)
-                dpname = manifest.Name.
-                vers=
+                dpname = manifest.Name.split(']')
+                dpname = dpname[dpname.length-1]
+                ver=manifest.Version
             } catch (error) {
                 console.error(error)
             }
 
             return({
                 displayName : dpname ,
-                vers : ver
+                vers : 'v'+ver
+            })
+        }
+        events(){
+            ipcMain.on("updateModStatus",(e, data)=>{
+                for(let i; i<this.lstMod.length; i++){
+                    if(this.lstMod[i].name =)
+                }
+                console.log(data)
             })
         }
     }
@@ -103,6 +110,9 @@ module.exports = (win) => {
                 vers : obj.meta.vers
              }
             this.enable = obj.enable; //is the mod enable or not
+        }
+        toggleMod(){
+            fs.copyFile(this.path,ACTIVE_PATH)
 
         }
     }
@@ -115,4 +125,5 @@ module.exports = (win) => {
 
     let modFolder=new ModFolder()
     // console.log(modFolder)
+
 }
