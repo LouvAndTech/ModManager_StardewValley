@@ -94,7 +94,9 @@ module.exports = (win) => {
         events(){
             ipcMain.on("updateModStatus",(e, data)=>{
                 for(let i; i<this.lstMod.length; i++){
-                    if(this.lstMod[i].name =)
+                    if(this.lstMod[i].name === data.name){
+
+                    }
                 }
                 console.log(data)
             })
