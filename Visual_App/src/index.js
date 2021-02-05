@@ -3,11 +3,14 @@ const path = require('path');
 const execution = require ("./execution")
 const Store = require('electron-store');
 const store = new Store();
+require('electron-reload')(__dirname);
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
+
 
 const createWindow = () => {
   // Create the browser window.
@@ -15,6 +18,8 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     x: mainWindowStateKeeper.x,
     y: mainWindowStateKeeper.y,
+    backgroundColor: '#24292e',
+
     width: mainWindowStateKeeper.width,
     height: mainWindowStateKeeper.height,
     webPreferences:{
@@ -27,6 +32,11 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  ipcMain.on('initialized',()=>{
+    execution(mainWindow);
+  })
+
 };
 
 // This method will be called when Electron has finished
@@ -51,7 +61,6 @@ app.on('activate', () => {
     createWindow();
   }
 });
-execution()
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 function windowStateKeeper(windowName) {

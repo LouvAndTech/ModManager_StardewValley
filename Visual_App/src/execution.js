@@ -6,7 +6,7 @@ const ACTIVE_PATH = 'Mods/Active/'
 const ZIP_PATH = 'Mods/Zip/'
 const MOD_PATH = 'Mods/Mod/'
 
-module.exports = () => {
+module.exports = (win) => {
     ipcMain.on('command', (e, data) => {
         console.log(data)
         if(data[0] = "refresh"){
@@ -43,6 +43,7 @@ module.exports = () => {
                 }))
             }
             this.update()
+            win.webContents.send('data',this.lstMod)
         }
         update(){
             for (let i=0;i<this.lstZip.length;i++){

@@ -3,14 +3,24 @@
   <head>
     <meta charset="UTF-8">
     <title>StardewValley ModManager</title>
-    <link rel="stylesheet" href="index.css">
+    <!-- <link rel="stylesheet" href="index.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
   </head>
-  <body>
-    <div class="intro">
-      <h1>StardewValley ModManager</h1>
+  <body class="text-white">
+    <div class="intro text-center p-4 w-4/5 m-auto my-8 bg-gradient-to-bl from-blue-600 to-purple-800 rounded-xl">
+      <h1 class="text-3xl">StardewValley ModManager</h1>
       <p>Welcome to the Mod Manager for StardewValley game</p>
     </div>
     <script src="browser.js"></script>
+
+      <table id="mod-list" class="p-2 m-auto table-auto border-separate border border-green-800">
+        <tr v-for="mod in lstModB" :key="mod.name">
+          <td>{{ mod.name }}</td>
+          <td>{{ mod.enable }}</td>
+        </tr>
+      </table>
+
+
   </body>
 </html>

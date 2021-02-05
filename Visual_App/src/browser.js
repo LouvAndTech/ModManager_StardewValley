@@ -1,4 +1,3 @@
-const { ipcRenderer } = require("electron");
 
 console.log("Browser.js loaded");
 const ipc =  require('electron').ipcRenderer
@@ -8,21 +7,20 @@ class ZipFile{
     constructor(name,path,unziped){
         this.name = name;//name of the file
         this.path = path;   //Path of the zip file 
-        this.unziped = unziped
-
     } 
 
     refresh(){
         ipc.send('command',["refresh", this])
     }
+    
 }
 
 class Mod{
-    constructor(name,path,enable,configPath){
-        this.name = name;   //Mod name
-        this.path = path;   //Usable ModFolder path 
-        this.configPath = configPath;   //Path to the "config" file into the mod folder
-        this.enable = enable; //is the mod enable or not 
+    constructor(obj){
+        this.name = obj.name;   //Mod name
+        this.path = obj.path;   //Usable ModFolder path 
+        this.configPath = obj.configPath;   //Path to the "config" file into the mod folder
+        this.enable = obj.enable; //is the mod enable or not 
     }
 }
 
@@ -31,11 +29,17 @@ class Mod{
 
 /*===MAIN===*/
 
+ipc.on("data", (e, data)=>{
+    let lstModB = [] 
+    for(let i=0;i<data.length;i++){
+        lstModB.push(new Mod(data[i]))
+    }
+    var app = new Vue({
+        el: '#mod-list',
+        data: {
+            lstModB: lstModB
+        }
+      })
+})
 
-//Initialise a new mod added as a zip file
-let zip1 = new ZipFile("test1",'test/try.zip',false);
-//transforme the Zip file into a usable mod folder
-
-
-
-console.log(zip1);
+ipc.send("initialized", true)
