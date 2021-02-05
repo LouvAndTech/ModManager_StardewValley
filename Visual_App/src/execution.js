@@ -1,6 +1,8 @@
 const { ipcMain } = require("electron");
 const fs = require('fs');
+const { version } = require("os");
 const unzipper = require("unzipper")
+const durableJsonLint = require('durable-json-lint');
 
 const ACTIVE_PATH = 'Mods/Active/'
 const ZIP_PATH = 'Mods/Zip/'
@@ -14,6 +16,7 @@ module.exports = (win) => {
             zip.refresh();
         }
     })
+
     
     class ModFolder{
         constructor(){
@@ -39,6 +42,7 @@ module.exports = (win) => {
                     name : lstModProv[i],
                     path : MOD_PATH+lstModProv[i],
                     configPath : 'NONE',
+                    meta : this.metaData(MOD_PATH+lstModProv[i],lstModProv[i]),
                     enable : lstActiveProv.includes(lstModProv[i]) ? true : false 
                 }))
             }
@@ -53,7 +57,33 @@ module.exports = (win) => {
                         .pipe(unzipper.Extract({ path :MOD_PATH+this.lstZip[i].name }));
                 }
             } 
-            console.log(this.lstMod)
+            // console.log(this.lstMod)
+        }
+        metaData(modPath,badName){
+            let dpname = badName
+            let ver = 0.0
+            let path = modPath
+            let itemList = []
+            for (let i=0;i<4;i++){
+                itemList = fs.readdirSync(path)
+                if (itemList.includes('manifest.json')){break}
+                else{path=path+'/'+itemList[0]}
+            }
+            console.log(path+'/manifest.json')
+            let RAW = fs.readFileSync(path+'/manifest.json', {encoding:'ascii'})
+            console.log(RAW)
+            let manifest = durableJsonLint(RAW)
+            try {
+            manifest = JSON.parse(manifest.json)
+                    
+                console.log(manifest.Name)tch (error) {
+                console.log(e)
+            }rror
+            console.log(manifest.Name)
+            return({
+                displayName : dpname ,
+                vers : ver
+            })
         }
     }
     class Mod{
@@ -61,7 +91,12 @@ module.exports = (win) => {
             this.name = obj.name;   //Mod name
             this.path = obj.path;   //Usable ModFolder path 
             this.configPath = obj.configPath;   //Path to the "config" file into the mod folder
-            this.enable = obj.enable; //is the mod enable or not 
+            this.meta = {
+                displayName : obj.meta.displayName,
+                vers : obj.meta.vers
+             }
+            this.enable = obj.enable; //is the mod enable or not
+
         }
     }
     class ZipFile{
@@ -69,10 +104,8 @@ module.exports = (win) => {
             this.name = obj.name;//name of the file
             this.path = obj.path;   //Path of the zip file 
         } 
-
-        
     }
 
     let modFolder=new ModFolder()
-    console.log(modFolder)
+    // console.log(modFolder)
 }

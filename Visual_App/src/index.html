@@ -14,13 +14,26 @@
     </div>
     <script src="browser.js"></script>
 
-      <table id="mod-list" class="p-2 m-auto table-auto border-separate border border-green-800">
-        <tr v-for="mod in lstModB" :key="mod.name">
-          <td>{{ mod.name }}</td>
-          <td>{{ mod.enable }}</td>
+      <table id="mod-list" class="p-2 m-auto table-auto">
+        <template v-for="mod in lstModB" >
+        <tr :key="mod.name">
+          <td class="p-2 bg-gradient-to-bl from-blue-900 to-purple-900 rounded">{{ mod.name }}</td>
+          <td class="w-2"></td>
+          <td class="px-2">
+            <a class="text-center rounded h-full w-full" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable">{{ mod.enable ? "Activé" : "Désactivé" }}</a>
+          </td>
         </tr>
+        <tr>
+          <td class="p-2 "></td>
+          <td class="p-2 "></td>
+        </tr>
+      </template> 
       </table>
 
-
+      <div class="fixed bottom-0 w-full h-16">
+        <div class="flex flex-row justify-center h-16">
+          <a href="#" class="bg-gradient-to-bl from-blue-900 to-purple-900 p-2 h-10 mx-auto rounded">Lancer le jeu</a>
+        </div>
+      </div>
   </body>
 </html>

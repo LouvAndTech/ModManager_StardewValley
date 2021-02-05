@@ -43,6 +43,7 @@
     }
   },
   "dependencies": {
+    "durable-json-lint": "0.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.1",
     "unzipper": "^0.10.11"
