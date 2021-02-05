@@ -93,12 +93,15 @@ module.exports = (win) => {
         }
         events(){
             ipcMain.on("updateModStatus",(e, data)=>{
-                for(let i; i<this.lstMod.length; i++){
-                    if(this.lstMod[i].name === data.name){
 
+                for(let i=0; i < this.lstMod.length; i++){
+                    if(this.lstMod[i].name === data.name){
+                        console.log(data.name)
+                        console.log(this.lstMod[i].name)
+                        this.lstMod[i].toggleMod(data.enable)
+                        return
                     }
                 }
-                console.log(data)
             })
         }
     }
@@ -113,8 +116,10 @@ module.exports = (win) => {
              }
             this.enable = obj.enable; //is the mod enable or not
         }
-        toggleMod(){
-            fs.copyFile(this.path,ACTIVE_PATH)
+        toggleMod(state){
+            this.enable = state
+            console.log(this.enable)
+            //fs.copyFile(this.path,ACTIVE_PATH)
 
         }
     }
