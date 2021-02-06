@@ -67,7 +67,6 @@ module.exports = (win) => {
         
         events(){
             ipcMain.on("updateModStatus",(e, data)=>{
-
                 for(let i=0; i < this.lstMod.length; i++){
                     if(this.lstMod[i].name === data.name){
                         this.lstMod[i].toggleMod(data.enable)
@@ -92,7 +91,7 @@ module.exports = (win) => {
             this.enable = state
             //console.log(this.enable)
             if (state){
-                console.log(this.name," // Copy to active folder")
+                console.log(this.path," // Copy to active folder")
                 //fs.copyFile(this.path,ACTIVE_PATH)
             }
             else{

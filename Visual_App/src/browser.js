@@ -39,10 +39,14 @@ ipc.on("data", (e, data)=>{
     for(let i=0;i<data.length;i++){
         lstModB.push(new Mod(data[i]))
     }
-    var app = new Vue({
-        el: '#mod-list',
+    lstModB.forEach(parent => {
+        exploreChildrens(parent.childrens)
+    });
+
+    new Vue({
+        el: '#app',
         data: {
-            lstModB: lstModB,
+            modList: lstModB,
             updateMods: updateMods
         }
       })
@@ -53,3 +57,42 @@ ipc.send("initialized", true)
 function updateMods(mod){
     ipc.send("updateModStatus", mod)
 }
+
+function exploreChildrens(parent){
+    parent.forEach(el => {
+        //console.log(el.name)
+        if (el.childrens.length) {
+            exploreChildrens(el.childrens)
+        }
+    });
+}
+
+Vue.component('tree-menu', { 
+    template: '#tree-menu',
+    props: [ 'nodes', 'label', 'depth', 'version', 'showUi', 'mod' ],
+    data() {
+       return {
+         showChildren: false,
+         updateMods: updateMods
+       }
+    },
+    computed: {
+      iconClasses() {
+        return {
+          'fa-plus-square-o': !this.showChildren,
+          'fa-minus-square-o': this.showChildren
+        }
+      },
+      labelClasses() {
+        return { 'has-children': this.nodes }
+      },
+      indent() {
+        return { width: `calc(60% - ${this.depth * 25}px)`,  transform: `translate(${this.depth * 25}px)` }
+      }
+    },
+    methods: {
+      toggleChildren() {
+         this.showChildren = !this.showChildren;
+      }
+    }
+  });
