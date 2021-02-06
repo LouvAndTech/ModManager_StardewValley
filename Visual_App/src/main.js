@@ -30,8 +30,8 @@ module.exports = (win) => {
             win.webContents.send('data',this.lstMod)
         }
         refresh(){
-            let lstZipProv = fs.readdirSync('Mods/Zip');
-            let lstModProv = fs.readdirSync('Mods/Mod');
+            let lstZipProv = fs.readdirSync(ZIP_PATH);
+            let lstModProv = this.lstModCreat();
             let lstActiveProv = fs.readdirSync(ACTIVE_PATH)
             /*console.log(lstZipProv)
             console.log(lstModProv)
@@ -64,6 +64,19 @@ module.exports = (win) => {
             } 
             // console.log(this.lstMod)
         }
+        lstModCreat(){
+            let totalMod=[]
+            let actualDirFolder = MOD_PATH
+            let actualDirFile = fs.rreaddirSync(actualDirFolder)
+            if (actualDirFile.includes('manifest.json')){
+                actualDirFolder
+            }
+            for(let i1 = 0; i1<fs.readdirSync(MOD_PATH);i++){
+                if ()
+                actualDir = ()
+            }
+            return ()
+        }
         metaData(modPath,badName){
             let dpname = badName
             let ver = "0.0"
@@ -83,6 +96,7 @@ module.exports = (win) => {
                 dpname = dpname[dpname.length-1]
                 ver=manifest.Version
             } catch (error) {
+                console.log(badName);
                 console.error(error)
             }
 
@@ -96,8 +110,6 @@ module.exports = (win) => {
 
                 for(let i=0; i < this.lstMod.length; i++){
                     if(this.lstMod[i].name === data.name){
-                        console.log(data.name)
-                        console.log(this.lstMod[i].name)
                         this.lstMod[i].toggleMod(data.enable)
                         return
                     }
@@ -118,8 +130,16 @@ module.exports = (win) => {
         }
         toggleMod(state){
             this.enable = state
-            console.log(this.enable)
-            //fs.copyFile(this.path,ACTIVE_PATH)
+            //console.log(this.enable)
+            if (state){
+                console.log(this.name," // Copy to active folder")
+                //fs.copyFile(this.path,ACTIVE_PATH)
+            }
+            else{
+                console.log(this.name," // Remove from active folder")
+            }
+            
+            
 
         }
     }
