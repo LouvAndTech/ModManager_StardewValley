@@ -3,6 +3,7 @@ const fs = require('fs');
 const { version } = require("os");
 const unzipper = require("unzipper")
 const durableJsonLint = require('durable-json-lint');
+const encoding = require('encoding-japanese');
 
 const ACTIVE_PATH = 'Mods/Active/'
 const ZIP_PATH = 'Mods/Zip/'
@@ -31,7 +32,7 @@ module.exports = (win) => {
         }
         refresh(){
             let lstZipProv = fs.readdirSync(ZIP_PATH);
-            let lstModProv = this.lstModCreat();
+            let lstModProv = fs.readdirSync(MOD_PATH);
             let lstActiveProv = fs.readdirSync(ACTIVE_PATH)
             /*console.log(lstZipProv)
             console.log(lstModProv)
@@ -49,7 +50,6 @@ module.exports = (win) => {
                     name : lstModProv[i],
                     path : MOD_PATH+lstModProv[i],
                     configPath : 'NONE',
-                    meta : this.metaData(MOD_PATH+lstModProv[i],lstModProv[i]),
                     enable : lstActiveProv.includes(lstModProv[i]) ? true : false 
                 }))
             }
@@ -64,47 +64,7 @@ module.exports = (win) => {
             } 
             // console.log(this.lstMod)
         }
-        lstModCreat(){
-            let totalMod=[]
-            let actualDirFolder = MOD_PATH
-            let actualDirFile = fs.rreaddirSync(actualDirFolder)
-            if (actualDirFile.includes('manifest.json')){
-                actualDirFolder
-            }
-            for(let i1 = 0; i1<fs.readdirSync(MOD_PATH);i++){
-                if ()
-                actualDir = ()
-            }
-            return ()
-        }
-        metaData(modPath,badName){
-            let dpname = badName
-            let ver = "0.0"
-            let path = modPath
-            let itemList = []
-            for (let i=0;i<4;i++){
-                itemList = fs.readdirSync(path)
-                if (itemList.includes('manifest.json')){break}
-                else{path=path+'/'+itemList[0]}
-            }
-            let RAW = fs.readFileSync(path+'/manifest.json', {encoding:'ascii'})
-            let manifest = durableJsonLint(RAW)
-
-            try {
-                manifest = JSON.parse(manifest.json)
-                dpname = manifest.Name.split(']')
-                dpname = dpname[dpname.length-1]
-                ver=manifest.Version
-            } catch (error) {
-                console.log(badName);
-                console.error(error)
-            }
-
-            return({
-                displayName : dpname ,
-                vers : 'v'+ver
-            })
-        }
+        
         events(){
             ipcMain.on("updateModStatus",(e, data)=>{
 
@@ -117,16 +77,16 @@ module.exports = (win) => {
             })
         }
     }
+
     class Mod{
         constructor(obj){
             this.name = obj.name;   //Mod name
+            this.childrens = [] //Children(s) Mod(s)
             this.path = obj.path;   //Usable ModFolder path 
             this.configPath = obj.configPath;   //Path to the "config" file into the mod folder
-            this.meta = {
-                displayName : obj.meta.displayName,
-                vers : obj.meta.vers
-             }
+            this.meta = this.metaData(this.path,this.name)
             this.enable = obj.enable; //is the mod enable or not
+            this.findChildrens()
         }
         toggleMod(state){
             this.enable = state
@@ -138,9 +98,55 @@ module.exports = (win) => {
             else{
                 console.log(this.name," // Remove from active folder")
             }
-            
-            
+        }
+        findChildrens(){
+            let folderContent = fs.readdirSync(this.path)
+            if (folderContent.includes('manifest.json')){
+                return (null)
+            }
+            else{
+                for(let i = 0; i<folderContent.length;i++){
+                    this.childrens.push(new Mod({
+                        name : folderContent[i],
+                        path : this.path+'/'+folderContent[i],
+                        configPath : 'NONE',
+                        enable : false
+                    }))
+                }
+            }
+        }
+        metaData(modPath,badName){
+            let dpname = badName
+            let ver = "0.0"
+            let path = modPath
+            let itemList = []
+            for (let i=0;i<4;i++){
+                itemList = fs.readdirSync(path)
+                if (itemList.includes('manifest.json')){
+                    let RAW = fs.readFileSync(path+'/manifest.json')
+                    let manifest = RAW.toString().replace(/^\uFEFF/gm, "").replace(/^\u00BB\u00BF/gm,"")
+                    manifest = durableJsonLint(manifest)
 
+                    try {
+                        manifest = JSON.parse(manifest.json)
+                        dpname = manifest.Name.split(']')
+                        dpname = dpname[dpname.length-1]
+                        ver=manifest.Version
+                        
+                    } catch (error) {
+                        console.log(badName);
+                        console.error(error)
+                    }
+                    break
+                }
+                else{
+                    path=path+'/'+itemList[0]
+                }
+            }   
+            return({
+                displayName : dpname ,
+                vers : 'v'+ver
+            })
         }
     }
     class ZipFile{

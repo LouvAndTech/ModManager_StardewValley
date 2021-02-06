@@ -18,6 +18,7 @@ class ZipFile{
 class Mod{
     constructor(obj){
         this.name = obj.name;   //Mod name
+        this.childrens = obj.childrens
         this.path = obj.path;   //Usable ModFolder path 
         this.configPath = obj.configPath;   //Path to the "config" file into the mod folder
         this.meta = {
