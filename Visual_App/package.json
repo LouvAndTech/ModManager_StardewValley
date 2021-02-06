@@ -46,6 +46,7 @@
     "durable-json-lint": "0.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.1",
+    "encoding-japanese": "^1.0.30",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
