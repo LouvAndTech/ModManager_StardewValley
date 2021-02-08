@@ -33,7 +33,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   ipcMain.on('initialized',()=>{
     main(mainWindow);
@@ -76,7 +76,7 @@ function windowStateKeeper(windowName) {
     windowState = {
       x: undefined,
       y: undefined,
-      width: 1000,
+      width: 550,
       height: 800,
     };
   }  function saveState() {

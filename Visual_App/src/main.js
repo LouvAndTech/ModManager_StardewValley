@@ -4,6 +4,7 @@ const { version } = require("os");
 const unzipper = require("unzipper")
 const durableJsonLint = require('durable-json-lint');
 const encoding = require('encoding-japanese');
+const copydir = require('copy-dir');
 
 const ACTIVE_PATH = 'Mods/Active/'
 const ZIP_PATH = 'Mods/Zip/'
@@ -88,15 +89,28 @@ module.exports = (win) => {
             this.findChildrens()
         }
         toggleMod(state){
+            //console.log('Avant : ',this.enable)
             this.enable = state
-            //console.log(this.enable)
             if (state){
-                console.log(this.path," // Copy to active folder")
-                //fs.copyFile(this.path,ACTIVE_PATH)
+                if (!fs.readdirSync(ACTIVE_PATH).includes(this.name)){
+                    //console.log("Le Mod selectionne est :",this.name)
+                    //console.log(this.path," // Copy to active folder")
+                    fs.mkdir((ACTIVE_PATH+'/'+this.name), (err) => { 
+                        if (err) {return console.error(err);} 
+                        //console.log('Directory created successfully!'); 
+                    })
+                    copydir.sync(this.path,ACTIVE_PATH+'/'+this.name)
+                }
             }
             else{
-                console.log(this.name," // Remove from active folder")
+                //console.log("Le Mod selectionne est :",this.name)
+                //console.log(this.path," // Remove from active folder")
+                fs.rmdir(ACTIVE_PATH+'/'+this.name, { recursive: true }, (err) => {
+                    if (err) {throw err;}
+                    //console.log(`${ACTIVE_PATH+'/'+this.name} is deleted!`);
+                });
             }
+            //console.log('Apres : ',this.enable)
         }
         findChildrens(){
             let folderContent = fs.readdirSync(this.path)

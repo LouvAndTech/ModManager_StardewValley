@@ -49,19 +49,14 @@
     <script src="browser.js"></script>
     <script type="text/x-template" id="tree-menu">
       <div class="tree-menu">
-        <div class="label-wrapper" @click="toggleChildren">
+        <div class="label-wrapper" >
           <div  :class="labelClasses" class=" flex justify-between">
             <div class="grid grid-cols-7 gap-4 w-full">
-              <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-4" :style="indent" >{{ label }}</div>
+              <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-4" href="#" @click="toggleChildren" :style="indent" >{{ label }}</div>
               <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-2">{{ version }}</div>
               <a v-if="showUi" class="text-center rounded p-2 my-2 transition-colors h-10 col-span-1" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a>
               <div v-else class=" p-2 my-2"></div>
             </div>
-            <!-- <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-3/5" :style="indent">{{ label }}</span>
-            <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-1/5">{{ version }}</span>
-            <a v-if="showUi" class="text-center rounded h-full w-1/5 p-2 m-2 transition-colors" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a> -->
-            
-            
           </div>
         </div>
         <tree-menu 
