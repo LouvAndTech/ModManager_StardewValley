@@ -2,46 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <style>
+      ::-webkit-scrollbar {
+        width: 10px;
+        display: block;
+      }
+      ::-webkit-scrollbar-thumb {background: #888; }
+      ::-webkit-scrollbar-thumb:hover {background: #555;}
+      body{
+        overflow-y: scroll;
+      }
+    </style>
     <title>StardewValley ModManager</title>
     <!-- <link rel="stylesheet" href="index.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
   </head>
-  <body class="text-white">
-    <div class="intro text-center p-4 w-4/5 m-auto my-8 bg-gradient-to-bl from-blue-600 to-purple-800 rounded-xl">
-      <h1 class="text-3xl">StardewValley ModManager</h1>
-      <p>Welcome to the Mod Manager for StardewValley game</p>
-    </div>
-    <script src="browser.js"></script>
 
-      <!-- <table id="mod-list" class="p-2 m-auto table-auto">
-        <template v-for="mod in lstModB" >
-        <tr :key="mod.name">
-          <td class="p-2 bg-gradient-to-bl from-blue-900 to-purple-900 rounded">{{ mod.meta.displayName }} </td>
-          <td class="w-2"></td>
-          <td class="p-2 bg-gradient-to-bl from-blue-900 to-purple-900 rounded">{{ mod.meta.vers }} </td>
-          <td class="w-2"></td>
-          <td class="px-2 flex h-10">
-            <a class="text-center rounded h-full w-full p-2 transition-colors" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="p-2 "></td>
-          <td class="p-2 "></td>
-        </tr>
-      </template> 
-      </table> -->
-
-
-
-      <div class="fixed bottom-0 w-full h-16">
-        <div class="flex flex-row justify-center h-16">
-          <a href="#" >Launch Game</a>
-        </div>
+  <body class="text-white" >
+    <div style="height:calc(100vh - 4rem)" class="overflow-auto p-8">
+      <div class="intro text-center p-4 w-4/5 m-auto mb-8 bg-gradient-to-bl from-blue-600 to-purple-800 rounded-xl">
+        <h1 class="text-3xl">StardewValley ModManager</h1>
+        <p>Welcome to the Mod Manager for StardewValley game</p>
       </div>
-
       <div id="app">
-        <div v-for="mod in modList" class="mx-12" :key="mod.name">
+        <div v-for="mod in modList" class="" :key="mod.name">
           <tree-menu 
           :nodes="mod.childrens" 
           :depth="0"   
@@ -52,28 +37,43 @@
           ></tree-menu>
         </div>
       </div>
-
-      <script type="text/x-template" id="tree-menu">
-        <div class="tree-menu">
-          <div class="label-wrapper" @click="toggleChildren">
-            <div  :class="labelClasses" class=" flex justify-between">
-              <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-3/5" :style="indent">{{ label }}</span>
-              <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-1/5">{{ version }}</span>
-              <a v-if="showUi" class="text-center rounded h-full w-1/5 p-2 m-2 transition-colors" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a>
-              <div v-else class="w-1/5 p-2 m-2"></div>
+    </div>
+      
+    <div class="h-full w-full " >
+      <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded flex flex-row justify-center h-full items-center">
+        <a href="#" >Launch Game</a>
+      </div>
+    </div>
+    
+    <!-- Scripts-->
+    <script src="browser.js"></script>
+    <script type="text/x-template" id="tree-menu">
+      <div class="tree-menu">
+        <div class="label-wrapper" @click="toggleChildren">
+          <div  :class="labelClasses" class=" flex justify-between">
+            <div class="grid grid-cols-7 gap-4 w-full">
+              <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-4" :style="indent" >{{ label }}</div>
+              <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-2">{{ version }}</div>
+              <a v-if="showUi" class="text-center rounded p-2 my-2 transition-colors h-10 col-span-1" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a>
+              <div v-else class=" p-2 my-2"></div>
             </div>
+            <!-- <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-3/5" :style="indent">{{ label }}</span>
+            <span class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded w-1/5">{{ version }}</span>
+            <a v-if="showUi" class="text-center rounded h-full w-1/5 p-2 m-2 transition-colors" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a> -->
+            
+            
           </div>
-          <tree-menu 
-            v-if="showChildren"
-            v-for="mod in nodes" 
-            :nodes="mod.childrens" 
-            :label="mod.meta.displayName"
-            :depth="depth + 1" 
-            :version="mod.meta.vers"
-          >
-          </tree-menu>
         </div>
-      </script>
-
+        <tree-menu 
+          v-if="showChildren"
+          v-for="mod in nodes" 
+          :nodes="mod.childrens" 
+          :label="mod.meta.displayName"
+          :depth="depth + 1" 
+          :version="mod.meta.vers"
+        >
+        </tree-menu>
+      </div>
+    </script>
   </body>
 </html>

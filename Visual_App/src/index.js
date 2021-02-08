@@ -18,6 +18,8 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     x: mainWindowStateKeeper.x,
     y: mainWindowStateKeeper.y,
+    minWidth : 550,
+    minHeight: 350,
     backgroundColor: '#24292e',
 
     width: mainWindowStateKeeper.width,
