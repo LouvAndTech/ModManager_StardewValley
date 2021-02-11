@@ -20,6 +20,7 @@
   </head>
 
   <body class="text-white" >
+
     <div style="height:calc(100vh - 4rem)" class="overflow-auto p-8">
       <div class="intro text-center p-4 w-4/5 m-auto mb-8 bg-gradient-to-bl from-blue-600 to-purple-800 rounded-xl">
         <h1 class="text-3xl">StardewValley ModManager</h1>
@@ -52,7 +53,7 @@
         <div class="label-wrapper" >
           <div  :class="labelClasses" class=" flex justify-between">
             <div class="grid grid-cols-7 gap-4 w-full">
-              <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-4" href="#" @click="toggleChildren" :style="indent" >{{ label }}</div>
+              <a class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-4" href="#" @click="toggleChildren" :style="indent" >{{ label }}</a>
               <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 my-2 rounded col-span-2">{{ version }}</div>
               <a v-if="showUi" class="text-center rounded p-2 my-2 transition-colors h-10 col-span-1" href="#" v-bind:class="[mod.enable ? 'bg-green-500' : 'bg-red-500']" v-on:click="mod.enable = !mod.enable; updateMods(mod)">{{ mod.enable ? "ON" : "OFF" }}</a>
               <div v-else class=" p-2 my-2"></div>

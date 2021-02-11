@@ -46,8 +46,6 @@ ipc.on("data", (e, data)=>{
       }
     })
 })
- 
-ipc.send("initialized", true)
 
 function updateMods(mod){
   ipc.send("updateModStatus", mod)
@@ -91,3 +89,5 @@ Vue.component('tree-menu', {
     }
   }
 });
+
+ipc.send("initialized", true)
