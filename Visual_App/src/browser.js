@@ -52,8 +52,8 @@ function updateMods(mod){
 }
 function addFile(){
   console.log("Ajout du fichier \n->START")
-  var fileSelect = document.getElementById("fileSelect")
-  console.log(fileSelect)
+  var selectedFile = document.getElementById('input');
+  console.log(selectedFile)
   console.log("->END")
 }
 
