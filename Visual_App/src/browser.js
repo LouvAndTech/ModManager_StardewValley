@@ -50,6 +50,12 @@ ipc.on("data", (e, data)=>{
 function updateMods(mod){
   ipc.send("updateModStatus", mod)
 }
+function addFile(){
+  console.log("Ajout du fichier \n->START")
+  var fileSelect = document.getElementById("fileSelect")
+  console.log(fileSelect)
+  console.log("->END")
+}
 
 function exploreChildrens(parent){
   parent.forEach(el => {
