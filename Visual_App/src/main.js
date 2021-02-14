@@ -19,6 +19,11 @@ module.exports = (win) => {
         }
     })
 
+    let Dependencies = {
+        installed : [],
+        needed : [],
+        missing :[]
+    }
     
     class ModFolder{
         constructor(){
@@ -29,9 +34,10 @@ module.exports = (win) => {
             this.refresh()
             this.update()
             this.refresh()
+            updateDep()
             win.webContents.send('data',this.lstMod)
         }
-        refresh(){
+        refresh(Dependencies){
             let lstZipProv = fs.readdirSync(ZIP_PATH);
             let lstModProv = fs.readdirSync(MOD_PATH);
             let lstActiveProv = fs.readdirSync(ACTIVE_PATH)
@@ -53,6 +59,12 @@ module.exports = (win) => {
                     configPath : 'NONE',
                     enable : lstActiveProv.includes(lstModProv[i]) ? true : false 
                 }))
+                /*try {
+                    Dependencies.push(this.lstMod[i].meta.uid)
+                    console.log(Dependencies)
+                } catch (error) {
+                    console.error(error)
+                }*/
             }
         }
         update(){
@@ -87,6 +99,7 @@ module.exports = (win) => {
             this.meta = this.metaData(this.path,this.name)
             this.enable = obj.enable; //is the mod enable or not
             this.findChildrens()
+            this.addListDep()
         }
         toggleMod(state){
             //console.log('Avant : ',this.enable)
@@ -131,6 +144,8 @@ module.exports = (win) => {
         metaData(modPath,badName){
             let dpname = badName
             let ver = "0.0"
+            let uid = 'NONE'
+            let depandance = []
             let path = modPath
             let itemList = []
             for (let i=0;i<4;i++){
@@ -144,8 +159,8 @@ module.exports = (win) => {
                         manifest = JSON.parse(manifest.json)
                         dpname = manifest.Name.split(']')
                         dpname = dpname[dpname.length-1]
-                        ver=manifest.Version
-                        
+                        uid = manifest.UniqueID
+                        depandance = manifest.Dependencies
                     } catch (error) {
                         console.log(badName);
                         console.error(error)
@@ -158,9 +173,30 @@ module.exports = (win) => {
             }   
             return({
                 displayName : dpname ,
-                vers : 'v'+ver
+                vers : 'v'+ver,
+                uniqueID : uid,
+                dep : depandance
             })
         }
+        addListDep(){
+            try {
+                Dependencies.installed.push(this.meta.uniqueID)
+            } catch (error) {
+                //console.error(error)
+            }
+            try{
+                for (let i=0;i<this.meta.dep.length;i++){
+                    if (this.meta.dep[i].IsRequired){
+                        Dependencies.needed.push(this.meta.dep[i].UniqueID)
+                    }
+                    
+                }
+            }catch(error){
+                //console.log(error)
+            }
+            
+        }
+        
     }
     class ZipFile{
         constructor(obj){
@@ -169,7 +205,16 @@ module.exports = (win) => {
         } 
     }
 
+    function updateDep(){
+        for (let i=0;i<Dependencies.needed.length;i++){
+            if (!Dependencies.installed.includes(Dependencies.needed[i])&&!Dependencies.missing.includes(Dependencies.needed[i])){
+                Dependencies.missing.push(Dependencies.needed[i])
+            }
+        }
+    }
+
     let modFolder=new ModFolder()
+    console.log("Dependencies : ",Dependencies)
     // console.log(modFolder)
 
 }
