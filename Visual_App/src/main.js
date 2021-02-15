@@ -59,12 +59,6 @@ module.exports = (win) => {
                     configPath : 'NONE',
                     enable : lstActiveProv.includes(lstModProv[i]) ? true : false 
                 }))
-                /*try {
-                    Dependencies.push(this.lstMod[i].meta.uid)
-                    console.log(Dependencies)
-                } catch (error) {
-                    console.error(error)
-                }*/
             }
         }
         update(){
@@ -161,6 +155,7 @@ module.exports = (win) => {
                         dpname = dpname[dpname.length-1]
                         uid = manifest.UniqueID
                         depandance = manifest.Dependencies
+                        ver=manifest.Version
                     } catch (error) {
                         console.log(badName);
                         console.error(error)
@@ -215,6 +210,7 @@ module.exports = (win) => {
 
     let modFolder=new ModFolder()
     console.log("Dependencies : ",Dependencies)
+    console.log(modFolder.lstMod[0].meta)
     // console.log(modFolder)
 
 }
