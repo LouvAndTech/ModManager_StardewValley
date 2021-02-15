@@ -50,6 +50,7 @@ ipc.on("data", (e, data)=>{
 function updateMods(mod){
   ipc.send("updateModStatus", mod)
 }
+
 function addFile(){
   console.log("Ajout du fichier \n->START")
   var selectedFile = document.getElementById('input');

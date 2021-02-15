@@ -5,6 +5,7 @@ const unzipper = require("unzipper")
 const durableJsonLint = require('durable-json-lint');
 const encoding = require('encoding-japanese');
 const copydir = require('copy-dir');
+const { Console } = require("console");
 
 const ACTIVE_PATH = 'Mods/Active/'
 const ZIP_PATH = 'Mods/Zip/'
@@ -21,8 +22,10 @@ module.exports = (win) => {
 
     let Dependencies = {
         installed : [],
+        activated :[],
         needed : [],
-        missing :[]
+        missingNI :[],
+        missingNA :[]
     }
     
     class ModFolder{
@@ -77,6 +80,7 @@ module.exports = (win) => {
                 for(let i=0; i < this.lstMod.length; i++){
                     if(this.lstMod[i].name === data.name){
                         this.lstMod[i].toggleMod(data.enable)
+                        updateDep()
                         return
                     }
                 }
@@ -98,7 +102,7 @@ module.exports = (win) => {
         toggleMod(state){
             //console.log('Avant : ',this.enable)
             this.enable = state
-            if (state){
+            if (state){ //Add mod
                 if (!fs.readdirSync(ACTIVE_PATH).includes(this.name)){
                     //console.log("Le Mod selectionne est :",this.name)
                     //console.log(this.path," // Copy to active folder")
@@ -107,17 +111,46 @@ module.exports = (win) => {
                         //console.log('Directory created successfully!'); 
                     })
                     copydir.sync(this.path,ACTIVE_PATH+'/'+this.name)
+                    //Dep :
+                    Dependencies.activated.push(this.meta.uniqueID)
+                    if (typeof this.childrens[0]!="undefined"){
+                        for (let i=0;i<this.childrens.length;i++){
+                            Dependencies.activated.push(this.childrens[i].meta.uniqueID)
+                            if(typeof this.childrens[i].childrens[0]!= "undefined") {
+                                for (let t=0;t<this.childrens[i].childrens.length;t++){
+                                    Dependencies.activated.push(this.childrens[i].childrens[t].meta.uniqueID)
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
-            else{
+            else{ //Remove mod
                 //console.log("Le Mod selectionne est :",this.name)
                 //console.log(this.path," // Remove from active folder")
                 fs.rmdir(ACTIVE_PATH+'/'+this.name, { recursive: true }, (err) => {
                     if (err) {throw err;}
                     //console.log(`${ACTIVE_PATH+'/'+this.name} is deleted!`);
                 });
+                //Dep :
+                delete Dependencies.activated[Dependencies.activated.indexOf(this.meta.uniqueID)]
+                    if (typeof this.childrens[0]!="undefined"){
+                        for (let i=0;i<this.childrens.length;i++){
+                            delete Dependencies.activated[Dependencies.activated.indexOf(this.childrens[i].meta.uniqueID)]
+                            if(typeof this.childrens[i].childrens[0]!= "undefined") {
+                                for (let t=0;t<this.childrens[i].childrens.length;t++){
+                                    delete Dependencies.activated[Dependencies.activated.indexOf(this.childrens[i].childrens[t].meta.uniqueID)]
+                                }
+                            }
+                        }
+                    }
+                
+                Dependencies.activated = Dependencies.activated.filter(function(x) {
+                     return x !== undefined;
+                })
             }
-            //console.log('Apres : ',this.enable)
+            //console.log("Dependencies Activated : ",Dependencies.activated)
         }
         findChildrens(){
             let folderContent = fs.readdirSync(this.path)
@@ -202,15 +235,17 @@ module.exports = (win) => {
 
     function updateDep(){
         for (let i=0;i<Dependencies.needed.length;i++){
-            if (!Dependencies.installed.includes(Dependencies.needed[i])&&!Dependencies.missing.includes(Dependencies.needed[i])){
-                Dependencies.missing.push(Dependencies.needed[i])
+            if (!Dependencies.installed.includes(Dependencies.needed[i])&&!Dependencies.missingNI.includes(Dependencies.needed[i])){
+                Dependencies.missingNI.push(Dependencies.needed[i])
+            }
+            if (!Dependencies.missingNI.includes(Dependencies.needed[i])&&!Dependencies.activated.includes(Dependencies.needed[i])){
+                Dependencies.missingNA.push(Dependencies.needed[i])
             }
         }
     }
 
     let modFolder=new ModFolder()
     console.log("Dependencies : ",Dependencies)
-    console.log(modFolder.lstMod[0].meta)
     // console.log(modFolder)
 
 }
