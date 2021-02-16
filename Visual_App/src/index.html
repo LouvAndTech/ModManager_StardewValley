@@ -26,13 +26,11 @@
         <h1 class="text-3xl">StardewValley ModManager</h1>
         <p>Welcome to the Mod Manager for StardewValley game</p>
       </div>
-
       <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded justify-center items-center">
         <p class="underline">Add Zip File here :</p>
         <input type="file" id="myFile" name="filename">
         <button href="#" class="bg-gradient-to-bl from-blue-900 to-purple-700 rounded p-2 m-2" onclick="addFile();">Add</button>
-      </div>      
-
+      </div>
       <div id="app">
         <div v-for="mod in modList" class="" :key="mod.name">
           <tree-menu 
@@ -48,8 +46,13 @@
     </div>
       
     <div class="h-full w-full " >
-      <div class="bg-gradient-to-bl from-blue-900 to-purple-700 p-2 m-2 rounded flex flex-row justify-center h-full items-center">
-        <a href="#">Launch Game</a>
+      <div class="grid grid-cols-7 gap-1 w-full">
+        <div class="bg-gradient-to-bl from-blue-900 to-purple-700 m-2 rounded flex flex-row justify-center h-full items-center col-span-5">
+          <a href="#">Launch Game</a>
+        </div>
+        <div class="bg-gradient-to-bl from-blue-900 to-purple-700 m-2 rounded flex flex-row justify-center h-full items-center col-span-2">
+          <a href="#">Dependencies</a>
+        </div>
       </div>
     </div>
     
