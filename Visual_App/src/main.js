@@ -98,6 +98,7 @@ module.exports = (win) => {
             this.enable = obj.enable; //is the mod enable or not
             this.findChildrens()
             this.addListDep()
+            toggleDep(this)
         }
         toggleMod(state){
             //console.log('Avant : ',this.enable)
@@ -111,19 +112,6 @@ module.exports = (win) => {
                         //console.log('Directory created successfully!'); 
                     })
                     copydir.sync(this.path,ACTIVE_PATH+'/'+this.name)
-                    //Dep :
-                    Dependencies.activated.push(this.meta.uniqueID)
-                    if (typeof this.childrens[0]!="undefined"){
-                        for (let i=0;i<this.childrens.length;i++){
-                            Dependencies.activated.push(this.childrens[i].meta.uniqueID)
-                            if(typeof this.childrens[i].childrens[0]!= "undefined") {
-                                for (let t=0;t<this.childrens[i].childrens.length;t++){
-                                    Dependencies.activated.push(this.childrens[i].childrens[t].meta.uniqueID)
-                                }
-                            }
-                        }
-                    }
-
                 }
             }
             else{ //Remove mod
@@ -133,24 +121,9 @@ module.exports = (win) => {
                     if (err) {throw err;}
                     //console.log(`${ACTIVE_PATH+'/'+this.name} is deleted!`);
                 });
-                //Dep :
-                delete Dependencies.activated[Dependencies.activated.indexOf(this.meta.uniqueID)]
-                    if (typeof this.childrens[0]!="undefined"){
-                        for (let i=0;i<this.childrens.length;i++){
-                            delete Dependencies.activated[Dependencies.activated.indexOf(this.childrens[i].meta.uniqueID)]
-                            if(typeof this.childrens[i].childrens[0]!= "undefined") {
-                                for (let t=0;t<this.childrens[i].childrens.length;t++){
-                                    delete Dependencies.activated[Dependencies.activated.indexOf(this.childrens[i].childrens[t].meta.uniqueID)]
-                                }
-                            }
-                        }
-                    }
-                
-                Dependencies.activated = Dependencies.activated.filter(function(x) {
-                     return x !== undefined;
-                })
             }
-            //console.log("Dependencies Activated : ",Dependencies.activated)
+            toggleDep(this)
+            console.log("Dependencies Activated : ",Dependencies.activated)
         }
         findChildrens(){
             let folderContent = fs.readdirSync(this.path)
@@ -234,18 +207,51 @@ module.exports = (win) => {
     }
 
     function updateDep(){
+        //Test dep to create lists
         for (let i=0;i<Dependencies.needed.length;i++){
+            //Dep installed or not
             if (!Dependencies.installed.includes(Dependencies.needed[i])&&!Dependencies.missingNI.includes(Dependencies.needed[i])){
                 Dependencies.missingNI.push(Dependencies.needed[i])
             }
+            //Dep Activated or not
             if (!Dependencies.missingNI.includes(Dependencies.needed[i])&&!Dependencies.activated.includes(Dependencies.needed[i])){
                 Dependencies.missingNA.push(Dependencies.needed[i])
             }
         }
     }
+    function toggleDep(mod){
+        if (mod.enable){
+            Dependencies.activated.push(mod.meta.uniqueID)
+            if (typeof mod.childrens[0]!="undefined"){
+                for (let i=0;i<mod.childrens.length;i++){
+                    Dependencies.activated.push(mod.childrens[i].meta.uniqueID)
+                    if(typeof mod.childrens[i].childrens[0]!= "undefined") {
+                        for (let t=0;t<mod.childrens[i].childrens.length;t++){
+                            Dependencies.activated.push(mod.childrens[i].childrens[t].meta.uniqueID)
+                        }
+                    }
+                }
+            }
+        }else{
+            delete Dependencies.activated[Dependencies.activated.indexOf(mod.meta.uniqueID)]
+            if (typeof mod.childrens[0]!="undefined"){
+                for (let i=0;i<mod.childrens.length;i++){
+                    delete Dependencies.activated[Dependencies.activated.indexOf(mod.childrens[i].meta.uniqueID)]
+                    if(typeof mod.childrens[i].childrens[0]!= "undefined") {
+                        for (let t=0;t<mod.childrens[i].childrens.length;t++){
+                            delete Dependencies.activated[Dependencies.activated.indexOf(mod.childrens[i].childrens[t].meta.uniqueID)]
+                        }
+                    }
+                }
+            }
+            Dependencies.activated = Dependencies.activated.filter(function(x) {
+                    return x !== undefined;
+            })
+        }
+    }
 
     let modFolder=new ModFolder()
-    console.log("Dependencies : ",Dependencies)
+    console.log("Dependencies Activated : ",Dependencies.activated)
     // console.log(modFolder)
 
 }
