@@ -19,7 +19,7 @@ const createWindow = () => {
     x: mainWindowStateKeeper.x,
     y: mainWindowStateKeeper.y,
     minWidth : 550,
-    minHeight: 350,
+    minHeight: 650,
     backgroundColor: '#24292e',
 
     width: mainWindowStateKeeper.width,

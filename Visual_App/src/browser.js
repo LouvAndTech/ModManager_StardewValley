@@ -42,7 +42,8 @@ ipc.on("data", (e, data)=>{
       el: '#app',
       data: {
           modList: lstModB,
-          updateMods: updateMods
+          updateMods: updateMods,
+          modalState : false
       }
     })
 })
@@ -96,5 +97,6 @@ Vue.component('tree-menu', {
     }
   }
 });
+
 
 ipc.send("initialized", true)

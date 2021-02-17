@@ -251,7 +251,7 @@ module.exports = (win) => {
     }
 
     let modFolder=new ModFolder()
-    console.log("Dependencies Activated : ",Dependencies.activated)
+    //console.log("Dependencies Activated : ",Dependencies.activated)
     // console.log(modFolder)
 
 }
