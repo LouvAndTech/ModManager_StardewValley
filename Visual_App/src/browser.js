@@ -29,7 +29,7 @@ class Mod{
 
 /*===MAIN===*/
 
-ipc.on("data", (e, data)=>{
+ipc.on("data", (e, data,dep)=>{
     let lstModB = [] 
     for(let i=0;i<data.length;i++){
         lstModB.push(new Mod(data[i]))
@@ -37,6 +37,7 @@ ipc.on("data", (e, data)=>{
     lstModB.forEach(parent => {
         exploreChildrens(parent.childrens)
     });
+    updateDep(dep)
 
     new Vue({
       el: '#app',
@@ -47,6 +48,28 @@ ipc.on("data", (e, data)=>{
       }
     })
 })
+
+function updateDep(dep){
+  let listMissingNA = ""
+  if (dep.missingNA.length==0){
+    document.getElementById('DepNotAct').innerHTML = "All the needed dependencies you have are activated."
+  }else{
+    for (let i =0; i<dep.missingNA.length;i++){
+      listMissingNA += listMissingNA+'\n'+dep.missingNA[i]
+    }
+    document.getElementById('DepNotAct').innerHTML = listMissingNA
+  }
+
+  let listMissingNI = ""
+  if (dep.missingNI.length==0){
+    document.getElementById('DepNotInst').innerHTML = "You've got all the dependencies."
+  }else{
+    for (let i =0; i<dep.missingNI.length;i++){
+      listMissingNI += '\n'+dep.missingNI[i]
+    }
+    document.getElementById('DepNotInst').innerHTML = listMissingNI
+  }
+}
 
 function updateMods(mod){
   ipc.send("updateModStatus", mod)
@@ -97,6 +120,7 @@ Vue.component('tree-menu', {
     }
   }
 });
+
 
 
 ipc.send("initialized", true)

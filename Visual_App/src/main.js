@@ -38,9 +38,9 @@ module.exports = (win) => {
             this.update()
             this.refresh()
             updateDep()
-            win.webContents.send('data',this.lstMod)
+            win.webContents.send('data',this.lstMod,Dependencies)
         }
-        refresh(Dependencies){
+        refresh(){
             let lstZipProv = fs.readdirSync(ZIP_PATH);
             let lstModProv = fs.readdirSync(MOD_PATH);
             let lstActiveProv = fs.readdirSync(ACTIVE_PATH)
@@ -123,7 +123,7 @@ module.exports = (win) => {
                 });
             }
             toggleDep(this)
-            console.log("Dependencies Activated : ",Dependencies.activated)
+            //console.log("Dependencies Activated : ",Dependencies.activated)
         }
         findChildrens(){
             let folderContent = fs.readdirSync(this.path)
@@ -208,16 +208,20 @@ module.exports = (win) => {
 
     function updateDep(){
         //Test dep to create lists
+        //console.log("Needed : ",Dependencies.needed)
         for (let i=0;i<Dependencies.needed.length;i++){
             //Dep installed or not
+            //console.log("i : ",i," Needed[i] : ",Dependencies.needed[i])
             if (!Dependencies.installed.includes(Dependencies.needed[i])&&!Dependencies.missingNI.includes(Dependencies.needed[i])){
                 Dependencies.missingNI.push(Dependencies.needed[i])
             }
             //Dep Activated or not
-            if (!Dependencies.missingNI.includes(Dependencies.needed[i])&&!Dependencies.activated.includes(Dependencies.needed[i])){
+            if (!Dependencies.missingNI.includes(Dependencies.needed[i])&&(!Dependencies.activated.includes(Dependencies.needed[i]))&&(!Dependencies.missingNA.includes(Dependencies.needed[i]))){
                 Dependencies.missingNA.push(Dependencies.needed[i])
             }
+            //console.log('Missing NA : ',Dependencies.missingNI)
         }
+        //console.log(Dependencies)
     }
     function toggleDep(mod){
         if (mod.enable){
