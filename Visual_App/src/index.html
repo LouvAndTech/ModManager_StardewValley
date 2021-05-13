@@ -66,24 +66,33 @@
           </div>
         </div>
       </div>
+
       <div v-show="modalState"  class="h-full w-full fixed top-0 bg-gray-800 bg-opacity-50 rounded-md" style="backdrop-filter:blur(5px)">
         <div id="myModal" class="h-full w-11/12 md:w-1/2 p-5 mx-auto flex flex-col items-center justify-center">
           <div class=" bg-white flex flex-col w-full h-auto rounded m-2 p-2 ">
            <!-- Header -->
             <div class="text-black flex w-full h-auto justify-center items-center relative">
-              <h1 class="flex w-10/12 h-auto py-3 justify-center items-center text-2xl font-bold text-center">Dependencies</h1>
+              <div class="flex w-10/12">
+                <h1 class=" h-auto py-3 justify-center items-center text-2xl font-bold text-center">Dependencies</h1>
+                <nav class="bg-white px-8 pt-2 ">
+                  <div class="-mb-px flex justify-left grid grid-cols-2 grid-flow-col">
+                    <a v-on:click="depState=false" class="no-underline text-teal-dark border-b-8 border-transparent uppercase tracking-wide font-bold text-xs py-3 mr-8" href="#">Not Installed</a>
+                    <a v-on:click="depState=true" class="no-underline text-grey-dark border-b-8 border-transparent uppercase tracking-wide font-bold text-xs py-3 mr-8" href="#">Not Activated</a>
+                  </div>
+                </nav>
+              </div>
               <div v-on:click="modalState = false" class="absolute w-1/12 h-auto justify-center cursor-pointer pt-3 top-0 right-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </div>
               <!--Header End-->
             </div>
             <!-- Modal Content-->
-            <div class="grid grid-cols-2 grid-rows-2 flex w-full h-full py-10 px-2 bg-gray-200 rounded text-center text-gray-500 max-h-96 overflow-auto divide-x divide-gray-500">
-              <div class="divide-y divide-gray-500 m-2 p-2">
+            <div class="grid grid-cols-2 grid-rows-2 flex w-full h-full py-10 px-2 bg-gray-200 rounded text-center text-gray-500 max-h-96 overflow-auto">
+              <div v-show="!depState" class="">
                 <div class="rows-span-1 p-2">Dependencies not Installed : </div>
                 <p id='DepNotInst'></p>
               </div>
-              <div class="divide-y divide-gray-500 m-2 p-2">
+              <div v-show="depState" class="">
                 <div class="rows-span-1 p-2 ">Dependencies not Activated : </div>
                 <p id='DepNotAct'></p>
               </div>

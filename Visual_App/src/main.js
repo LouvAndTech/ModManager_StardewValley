@@ -219,8 +219,9 @@ module.exports = (win) => {
             if (!Dependencies.missingNI.includes(Dependencies.needed[i])&&(!Dependencies.activated.includes(Dependencies.needed[i]))&&(!Dependencies.missingNA.includes(Dependencies.needed[i]))){
                 Dependencies.missingNA.push(Dependencies.needed[i])
             }
-            //console.log('Missing NA : ',Dependencies.missingNI)
+            //console.log('Missing NA : ',Dependencies.missingNA)
         }
+        //console.log('Missing NA : ',Dependencies.missingNA)
         //console.log(Dependencies)
     }
     function toggleDep(mod){

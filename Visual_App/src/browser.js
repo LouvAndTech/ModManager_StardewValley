@@ -44,7 +44,8 @@ ipc.on("data", (e, data,dep)=>{
       data: {
           modList: lstModB,
           updateMods: updateMods,
-          modalState : false
+          modalState : false,
+          depState : false
       }
     })
 })
@@ -55,7 +56,7 @@ function updateDep(dep){
     document.getElementById('DepNotAct').innerHTML = "All the needed dependencies you have are activated."
   }else{
     for (let i =0; i<dep.missingNA.length;i++){
-      listMissingNA += listMissingNA+'\n'+dep.missingNA[i]
+      listMissingNA += '\n'+dep.missingNA[i]
     }
     document.getElementById('DepNotAct').innerHTML = listMissingNA
   }
